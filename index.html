@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zedu login with a lively mascot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--accent:#7141f8;--accent-2:#9b7dff;--accent-3:#4f22d6;--soft:#efeaff;--spark:#ffd166;--text:#171717;--body:#525252;--line:#e4e4ea;--bg:#fff}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:Lato,ui-sans-serif,system-ui,sans-serif;line-height:1.45;overflow-x:hidden}
+.proto{background:#171717;color:#fff;font-size:12.5px;text-align:center;padding:6px 16px}
+.proto b{color:var(--spark)}
+.top{display:flex;justify-content:space-between;align-items:center;padding:16px 24px}
+.brand{display:flex;align-items:center;gap:8px;font-weight:900;font-size:20px}
+.mini{width:30px;height:30px;border-radius:9px;background:var(--accent);display:grid;place-items:center}
+.mini svg{width:16px;height:16px}
+.mini.zap{animation:zap .8s ease}
+@keyframes zap{0%{transform:none}30%{transform:scale(1.25) rotate(-12deg)}60%{transform:scale(.95) rotate(8deg)}100%{transform:none}}
+.top .alt{font-size:14px;color:var(--body)}
+.top .alt a{color:var(--accent);font-weight:700;text-decoration:none}
+.wrap{max-width:400px;margin:0 auto;padding:0 16px 60px;position:relative}
+
+/* ---------- mascot ---------- */
+.stagebox{position:relative;height:160px}
+.say{position:absolute;left:50%;top:0;transform:translateX(-50%) scale(var(--s,1));background:var(--soft);color:var(--accent-3);font-weight:800;font-size:13.5px;border-radius:14px;padding:6px 12px;white-space:nowrap;z-index:5;transition:transform .25s cubic-bezier(.3,1.6,.5,1),opacity .3s}
+.say::after{content:"";position:absolute;left:50%;bottom:-6px;margin-left:-6px;border:6px solid transparent;border-top-color:var(--soft);border-bottom:0}
+.say.bump{--s:1.1}
+/* #m = position + lean, .bob = hops and squash, .body = the shape */
+#m{position:absolute;left:50%;bottom:0;width:120px;height:112px;margin-left:-60px;cursor:pointer;z-index:2;
+  transform:translateY(var(--sink,0px)) rotate(var(--lean,0deg));transform-origin:50% 100%;transition:transform .45s cubic-bezier(.3,1.5,.5,1)}
+.bob{position:absolute;inset:0;transform-origin:50% 100%}
+.body{position:absolute;left:10px;right:10px;top:22px;bottom:0;background:radial-gradient(circle at 34% 28%,#b39cff,var(--accent) 52%,var(--accent-3));border-radius:50% 50% 44% 44%/56% 56% 44% 44%;transform-origin:50% 100%;animation:breathe 2.8s ease-in-out infinite;box-shadow:inset -6px -8px 0 rgba(0,0,0,.08)}
+@keyframes breathe{0%,100%{transform:scale(1,1)}50%{transform:scale(1.03,.97)}}
+.shadow{position:absolute;left:50%;bottom:-6px;width:80px;height:10px;margin-left:-40px;border-radius:50%;background:rgba(79,34,214,.18);filter:blur(2px);transition:transform .3s,opacity .3s}
+.antenna{position:absolute;left:50%;top:2px;width:22px;height:28px;margin-left:-11px;transform-origin:50% 100%;animation:sway 2.4s ease-in-out infinite;z-index:1}
+.antenna svg{width:22px;height:28px;display:block;filter:drop-shadow(0 0 0 rgba(255,209,102,0));transition:filter .3s}
+@keyframes sway{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
+.eyes{position:absolute;left:0;right:0;top:32px;display:flex;justify-content:center;gap:16px}
+.eye{width:21px;height:25px;background:#fff;border-radius:50%;position:relative;overflow:hidden;transition:transform .2s}
+.pupil{position:absolute;left:50%;top:50%;width:11px;height:12px;margin:-6px 0 0 -5.5px;background:#171717;border-radius:50%;transform:translate(var(--px,0px),var(--py,0px)) scale(var(--ps,1));transition:transform .1s linear}
+.pupil::after{content:"";position:absolute;right:2px;top:2px;width:3.5px;height:3.5px;border-radius:50%;background:#fff}
+.lid{position:absolute;inset:0;background:var(--accent);transform:translateY(-100%);transition:transform .1s}
+.brow{position:absolute;top:24px;width:16px;height:4px;border-radius:3px;background:#3a1a8f;transition:transform .25s cubic-bezier(.3,1.6,.5,1)}
+.brow.l{left:29px}.brow.r{right:29px}
+.cheek{position:absolute;top:60px;width:14px;height:7px;border-radius:50%;background:#ff9fc3;opacity:.7;transition:opacity .3s,transform .3s}
+.cheek.l{left:13px}.cheek.r{right:13px}
+.mouth{position:absolute;left:50%;top:62px;transform:translateX(-50%);transition:all .18s}
+.mouth.smile{width:22px;height:11px;border:3px solid #fff;border-top:0;border-radius:0 0 14px 14px}
+.mouth.o{width:12px;height:14px;border-radius:50%;background:#3a1a8f;border:2px solid #fff}
+.mouth.flat{width:16px;height:0;border-top:3px solid #fff;top:68px}
+.mouth.wobble{width:18px;height:8px;border:3px solid #fff;border-bottom:0;border-radius:12px 12px 0 0;top:66px}
+.mouth.big{width:30px;height:17px;background:#3a1a8f;border:3px solid #fff;border-top:0;border-radius:0 0 18px 18px}
+.mouth.yawn{width:16px;height:20px;border-radius:50%;background:#3a1a8f;border:2px solid #fff;top:58px}
+.hand{position:absolute;width:30px;height:20px;border-radius:12px;background:var(--accent-2);border:2px solid var(--accent-3);bottom:-8px;transition:transform .35s cubic-bezier(.3,1.6,.5,1);z-index:4}
+.hand.l{left:-2px}.hand.r{right:-2px}
+
+/* entrance: peeks up from behind the form, looks around, then jumps up */
+#m.enter .bob{animation:enter 1.7s cubic-bezier(.3,1.2,.5,1) both}
+@keyframes enter{0%{transform:translateY(90px) scale(1,1)}25%{transform:translateY(46px)}45%{transform:translateY(46px)}60%{transform:translateY(54px) scale(1.12,.86)}75%{transform:translateY(-26px) scale(.9,1.14)}88%{transform:translateY(0) scale(1.1,.9)}100%{transform:translateY(0) scale(1,1)}}
+
+/* moves */
+.bob.hop{animation:hop .55s cubic-bezier(.3,1.2,.5,1)}
+@keyframes hop{0%{transform:none}20%{transform:scale(1.12,.86)}50%{transform:translateY(-24px) scale(.92,1.1)}80%{transform:translateY(0) scale(1.08,.93)}100%{transform:none}}
+.bob.tap{animation:tap .14s ease}
+@keyframes tap{50%{transform:scale(1.05,.95)}}
+.bob.dance{animation:dance 1.2s ease}
+@keyframes dance{0%,100%{transform:none}15%{transform:translateX(-6px) rotate(-6deg)}30%{transform:translateY(-8px)}45%{transform:translateX(6px) rotate(6deg)}60%{transform:translateY(-8px)}75%{transform:translateX(-4px) rotate(-4deg)}}
+.bob.stretch{animation:stretch 1.1s ease}
+@keyframes stretch{0%,100%{transform:none}40%,60%{transform:scale(.9,1.14)}}
+.bob.shake{animation:shake .55s ease}
+@keyframes shake{0%,100%{transform:none}20%{transform:rotate(-10deg)}40%{transform:rotate(9deg)}60%{transform:rotate(-6deg)}80%{transform:rotate(4deg)}}
+.bob.squish{animation:squish .42s ease}
+@keyframes squish{40%{transform:scale(1.2,.8)}70%{transform:scale(.94,1.07)}}
+.bob.spin{animation:spin 1s cubic-bezier(.5,0,.3,1)}
+@keyframes spin{50%{transform:translateY(-30px) rotate(360deg) scale(1.1)}100%{transform:rotate(720deg)}}
+.bob.launch{animation:launch 1.3s cubic-bezier(.6,-0.3,.7,.2) forwards}
+@keyframes launch{0%{transform:none}25%{transform:translateY(8px) scale(1.18,.8)}100%{transform:translateY(-900px) scale(.85,1.3)}}
+
+/* expressions */
+#m.cover .hand{animation:none!important}
+#m.cover .hand.l{transform:translate(29px,-30px) rotate(12deg)}
+#m.cover .hand.r{transform:translate(-29px,-30px) rotate(-12deg)}
+#m.cover.cheat .hand.r{transform:translate(-29px,-16px) rotate(-34deg)}
+#m.cover .cheek{opacity:1;transform:scale(1.3)}
+#m.cover.cheat .cheek{background:#ff6b9a}
+#m.wave .hand.r{animation:wave 1s ease 2}
+@keyframes wave{0%,100%{transform:none}25%{transform:translate(10px,-44px) rotate(-35deg)}50%{transform:translate(10px,-44px) rotate(15deg)}75%{transform:translate(10px,-44px) rotate(-35deg)}}
+#m.up .brow.l{transform:translateY(-6px) rotate(-8deg)}#m.up .brow.r{transform:translateY(-6px) rotate(8deg)}
+#m.worried .brow.l{transform:translateY(-2px) rotate(18deg)}#m.worried .brow.r{transform:translateY(-2px) rotate(-18deg)}
+#m.happy .eye{transform:scaleY(.55) translateY(-4px)}
+#m.surprised .pupil{--ps:.6}
+#m.sleep{--sink:22px}
+#m.sleep .lid{transform:translateY(0)}
+#m.sleep .antenna{animation:none;transform:rotate(38deg)}
+#m.sleep .body{animation:snore 2.4s ease-in-out infinite}
+@keyframes snore{0%,100%{transform:scale(1,1)}50%{transform:scale(1.06,.95)}}
+#m.blink .lid{transform:translateY(0)}
+#m.charged .antenna svg{filter:drop-shadow(0 0 8px var(--spark))}
+#m.charged .antenna{animation:sway .3s ease-in-out infinite}
+#m.rainbow .body{background:conic-gradient(from 0deg,#ff6b9a,#f5b301,#22b07d,#4aa8ff,#7141f8,#ff6b9a);animation:breathe 2.8s ease-in-out infinite,hue 1.6s linear infinite}
+@keyframes hue{to{filter:hue-rotate(360deg)}}
+
+/* effects */
+.sp{position:absolute;left:calc(50% - 3px);top:18px;width:6px;height:6px;border-radius:50%;background:var(--spark);box-shadow:0 0 6px var(--spark);pointer-events:none;z-index:4;animation:sp .6s ease-out forwards}
+@keyframes sp{to{transform:translate(var(--x),var(--y)) scale(.3);opacity:0}}
+.note{position:absolute;font-size:16px;pointer-events:none;z-index:4;animation:note 1.3s ease-out forwards}
+@keyframes note{0%{transform:translate(0,0);opacity:0}20%{opacity:1}100%{transform:translate(var(--x),-60px) rotate(var(--r));opacity:0}}
+.trail{position:absolute;left:50%;bottom:10px;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:var(--c);pointer-events:none;z-index:1;animation:trail .9s ease-out forwards}
+@keyframes trail{to{transform:translate(var(--x),var(--y)) scale(.2);opacity:0}}
+.zz{position:absolute;font-weight:900;color:var(--accent);pointer-events:none;animation:zz 2.6s ease-out forwards;z-index:4}
+@keyframes zz{0%{transform:translate(0,0) scale(.6);opacity:0}20%{opacity:1}100%{transform:translate(36px,-70px) scale(1.4) rotate(14deg);opacity:0}}
+.confetti{position:fixed;width:9px;height:13px;border-radius:2px;background:var(--c);pointer-events:none;z-index:50;animation:conf var(--d) cubic-bezier(.2,.6,.4,1) forwards}
+@keyframes conf{to{transform:translate(var(--x),var(--y)) rotate(var(--r));opacity:0}}
+.flash{position:fixed;inset:0;background:radial-gradient(circle at 50% 22%,rgba(255,209,102,.5),rgba(113,65,248,.22) 40%,transparent 70%);pointer-events:none;z-index:40;opacity:0}
+.flash.on{animation:flash .7s ease-out}
+@keyframes flash{15%{opacity:1}100%{opacity:0}}
+.bolt-rain{position:fixed;top:-40px;width:18px;height:28px;pointer-events:none;z-index:45;animation:rain var(--d) cubic-bezier(.4,.1,.6,1) forwards}
+.bolt-rain svg{width:100%;height:100%}
+@keyframes rain{0%{transform:translateY(0) rotate(var(--r0))}100%{transform:translateY(110vh) rotate(var(--r1));opacity:.2}}
+
+/* ---------- form ---------- */
+h1{text-align:center;font-size:26px;margin:8px 0 2px}
+.sub{text-align:center;color:var(--body);margin:0 0 18px;font-size:15px}
+.oauth{display:grid;gap:10px}
+.oauth button{display:flex;align-items:center;justify-content:center;gap:10px;border:1px solid var(--line);background:#fff;border-radius:10px;padding:11px;font:inherit;font-weight:700;cursor:pointer;transition:transform .15s,border-color .15s}
+.oauth button:hover{transform:translateY(-2px);border-color:#cbbdfd}
+.or{display:flex;align-items:center;gap:12px;color:var(--body);font-size:13px;margin:16px 0}
+.or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
+.field{margin-bottom:12px}
+.field label{font-size:14px;font-weight:700;display:block;margin-bottom:5px}
+.inbox{position:relative}
+.field input{width:100%;font:inherit;border:1px solid var(--line);border-radius:10px;padding:11px 42px 11px 12px;outline:none;transition:border-color .2s,box-shadow .2s}
+.field input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(113,65,248,.15)}
+.eyebtn{position:absolute;right:8px;top:50%;transform:translateY(-50%);border:0;background:none;cursor:pointer;font-size:17px;padding:4px}
+.ok{position:absolute;right:12px;top:50%;transform:translateY(-50%) scale(0);color:#22b07d;font-weight:900;transition:transform .3s cubic-bezier(.3,1.8,.5,1)}
+.ok.on{transform:translateY(-50%) scale(1)}
+.rowx{display:flex;justify-content:space-between;align-items:center;font-size:14px;margin:4px 0 16px}
+.rowx a{color:var(--accent);font-weight:700;text-decoration:none}
+.go{width:100%;border:0;border-radius:10px;background:var(--accent);color:#fff;font:inherit;font-weight:800;font-size:16px;padding:13px;cursor:pointer;transition:transform .12s}
+.go:active{transform:scale(.97)}
+.magic{width:100%;margin-top:10px;border:1px solid var(--line);background:#fff;border-radius:10px;padding:12px;font:inherit;font-weight:700;cursor:pointer}
+.formbox.shake{animation:fshake .45s ease}
+@keyframes fshake{20%{transform:translateX(-8px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(3px)}}
+.done{display:none;text-align:center;padding:30px 0}
+.done.on{display:block;animation:rise .5s ease}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.done h2{margin:0 0 6px}
+.done p{color:var(--body);margin:0 0 16px}
+.tips{margin-top:26px;border-top:1px dashed var(--line);padding-top:14px;font-size:13px;color:var(--body)}
+.tips b{color:var(--text)}
+.tips ul{margin:6px 0 0;padding-left:18px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="proto">Prototype by Odofin Moronke · not the real Zedu login · <b>use pretend details only</b>, nothing is sent anywhere</div>
+
+<div class="top">
+  <div class="brand"><span class="mini" id="mini"><svg viewBox="0 0 24 24"><path fill="#fff" d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg></span>Zedu</div>
+  <div class="alt">Don't have an account? <a href="#" onclick="return false">Sign up</a></div>
+</div>
+
+<div class="wrap">
+  <div class="stagebox" id="stage">
+    <div class="say" id="say">…</div>
+    <div id="m" class="enter" role="img" aria-label="Zedu's mascot">
+      <span class="shadow" id="shadow"></span>
+      <div class="bob" id="bob">
+        <span class="antenna"><svg viewBox="0 0 24 28"><path fill="#ffd166" stroke="#4f22d6" stroke-width="1.5" d="M14 1 4 16h7l-2 11 11-16h-7z"/></svg></span>
+        <div class="body">
+          <span class="brow l"></span><span class="brow r"></span>
+          <div class="eyes"><span class="eye"><span class="pupil"></span><span class="lid"></span></span><span class="eye"><span class="pupil"></span><span class="lid"></span></span></div>
+          <span class="cheek l"></span><span class="cheek r"></span>
+          <span class="mouth smile" id="mouth"></span>
+        </div>
+        <span class="hand l"></span><span class="hand r"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="formbox" id="formbox">
+    <h1>Login to Zedu</h1>
+    <p class="sub">Welcome back! We've missed you!</p>
+    <div class="oauth">
+      <button id="g1"><svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>Sign in with Google</button>
+      <button id="ap"><svg width="16" height="18" viewBox="0 0 384 512"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>Sign in with Apple</button>
+    </div>
+    <div class="or">OR</div>
+    <div class="field"><label for="em">Email address</label><div class="inbox"><input id="em" type="text" inputmode="email" placeholder="you@school.edu (pretend)" autocomplete="off" spellcheck="false"><span class="ok" id="ok">✓</span></div></div>
+    <div class="field"><label for="pw">Password</label><div class="inbox"><input id="pw" type="password" placeholder="Any pretend password" autocomplete="off"><button class="eyebtn" id="eyebtn" aria-label="Show password">👁</button></div></div>
+    <div class="rowx"><label><input type="checkbox"> Remember me</label><a href="#" id="forgot" onclick="return false">Forgot Password?</a></div>
+    <button class="go" id="go">Login</button>
+    <button class="magic" id="magic">Login with magic link ✨</button>
+  </div>
+
+  <div class="done" id="done">
+    <h2>You're in! 🎉</h2>
+    <p>(Pretend. Nothing was sent anywhere.)</p>
+    <button class="go" id="again" style="max-width:240px">Try it again</button>
+  </div>
+
+  <div class="tips">
+    <b>Surprises to find:</b>
+    <ul>
+      <li>Watch it arrive. Then just watch: it gets up to things on its own.</li>
+      <li>Move your mouse around. Type an email with an @.</li>
+      <li>Click the password box, then the 👁 button.</li>
+      <li>Press Login with the boxes empty, then filled in.</li>
+      <li>Leave it alone for 15 seconds. Then wake it up.</li>
+      <li>Click it. Then click it 5 times.</li>
+    </ul>
+  </div>
+</div>
+<div class="flash" id="flash"></div>
+
+<script>
+const $=s=>document.querySelector(s);
+const m=$("#m"), bob=$("#bob"), say=$("#say"), mouth=$("#mouth"), em=$("#em"), pw=$("#pw"), stage=$("#stage");
+const COLORS=["#7141f8","#f5b301","#22b07d","#ff6b9a","#4aa8ff"];
+const BOLT='<svg viewBox="0 0 24 24"><path fill="COL" d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg>';
+let busy=true, sleeping=false, idleT, zzT, clicks=0, clickT, lookLock=null, moodT;
+
+function talk(t){say.textContent=t;say.classList.remove("bump");void say.offsetWidth;say.classList.add("bump");setTimeout(()=>say.classList.remove("bump"),250)}
+function face(f){mouth.className="mouth "+f}
+// One-off expression (brows, eyes) that clears itself.
+function mood(cls,ms){clearTimeout(moodT);m.classList.remove("up","worried","happy","surprised");if(cls){cls.split(" ").forEach(c=>m.classList.add(c));if(ms)moodT=setTimeout(()=>m.classList.remove(...cls.split(" ")),ms)}}
+function move(cls,ms){bob.classList.remove("hop","tap","dance","stretch","shake","squish","spin");void bob.offsetWidth;bob.classList.add(cls);setTimeout(()=>bob.classList.remove(cls),ms)}
+function sparks(n){for(let i=0;i<n;i++){const s=document.createElement("span");s.className="sp";const a=Math.random()*Math.PI*2,d=24+Math.random()*30;s.style.cssText+=`;--x:${Math.cos(a)*d}px;--y:${Math.sin(a)*d}px`;stage.appendChild(s);s.addEventListener("animationend",()=>s.remove())}}
+function calm(){return !busy&&!sleeping&&!m.classList.contains("cover")&&document.activeElement!==em}
+
+/* Eyes follow the mouse, and the whole body leans a little towards it. */
+function lookAt(x,y){
+  if(m.classList.contains("cover")||sleeping)return;
+  const r=m.getBoundingClientRect(), cx=r.left+r.width/2, cy=r.top+44;
+  const dx=x-cx, dy=y-cy, d=Math.hypot(dx,dy)||1, k=Math.min(1,d/220);
+  document.querySelectorAll(".pupil").forEach(p=>{p.style.setProperty("--px",(dx/d*4.5*k)+"px");p.style.setProperty("--py",(dy/d*5*k)+"px")});
+  m.style.setProperty("--lean",Math.max(-9,Math.min(9,dx/30))+"deg");
+}
+document.addEventListener("pointermove",e=>{if(!lookLock)lookAt(e.clientX,e.clientY);poke()});
+function lookAtEl(el){const r=el.getBoundingClientRect();lookAt(r.left+r.width/2,r.top+r.height/2)}
+
+/* Blinks, sometimes twice. */
+function blink(){m.classList.add("blink");setTimeout(()=>m.classList.remove("blink"),130)}
+setInterval(()=>{if(!sleeping&&!m.classList.contains("cover")){blink();if(Math.random()<.3)setTimeout(blink,260)}},3600);
+
+/* Arrival: peeks up from behind the form, looks left and right, then jumps up and waves. */
+setTimeout(()=>{talk("Is someone there? 👀");face("o");lookAt(innerWidth*.1,200)},380);
+setTimeout(()=>lookAt(innerWidth*.9,200),720);
+setTimeout(()=>{mood("up happy",900);face("big");talk("It's you! Welcome back! 👋")},1150);
+setTimeout(()=>{m.classList.remove("enter");m.classList.add("wave");setTimeout(()=>m.classList.remove("wave"),2100);$("#mini").classList.add("zap");sparks(6);face("smile");busy=false},1700);
+
+/* Left alone, it gets up to things: looks around, dances, stretches, hums, sparks its antenna. */
+const IDLE=[
+  ()=>{lookAt(0,innerHeight*.3);setTimeout(()=>lookAt(innerWidth,innerHeight*.3),700);setTimeout(()=>lookAt(innerWidth/2,innerHeight),1400)},
+  ()=>{move("dance",1200);face("big");setTimeout(()=>face("smile"),1200);notes(4)},
+  ()=>{move("stretch",1100);face("yawn");setTimeout(()=>face("smile"),1100)},
+  ()=>{m.classList.add("charged");sparks(8);setTimeout(()=>m.classList.remove("charged"),900)},
+  ()=>{mood("happy",900);move("hop",550)},
+];
+setInterval(()=>{if(calm()&&!lookLock)IDLE[Math.floor(Math.random()*IDLE.length)]()},4500);
+function notes(n){for(let i=0;i<n;i++)setTimeout(()=>{const s=document.createElement("span");s.className="note";s.textContent=["♪","♫"][i%2];s.style.cssText=`left:${45+Math.random()*20}%;top:30px;--x:${(Math.random()-.5)*60}px;--r:${(Math.random()-.5)*40}deg;color:${COLORS[i%5]}`;stage.appendChild(s);s.addEventListener("animationend",()=>s.remove())},i*250)}
+
+/* Email: it bobs with every key, gets excited at the @, and is delighted by a real email. */
+let sawAt=false;
+em.addEventListener("focus",()=>{lookLock="em";talk("What's your email? ✍️");face("smile")});
+em.addEventListener("blur",()=>{lookLock=null});
+em.addEventListener("input",()=>{
+  const v=em.value, r=em.getBoundingClientRect();
+  lookAt(r.left+14+Math.min(v.length*7.5,r.width-30),r.top+r.height/2);
+  move("tap",140);
+  if(v.includes("@")&&!sawAt){sawAt=true;move("hop",550);mood("up surprised",900);face("o");talk("Ooh, an @! 🤩")}
+  if(!v.includes("@"))sawAt=false;
+  const valid=/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(v);
+  $("#ok").classList.toggle("on",valid);
+  if(valid&&!em.dataset.v){em.dataset.v=1;mood("happy",1000);face("big");talk("Looks good! 👍");sparks(6)}
+  if(!valid)delete em.dataset.v;
+});
+
+/* Password: covers its eyes and blushes. Show password: peeks through its fingers, very guilty. */
+pw.addEventListener("focus",()=>{m.classList.add("cover");m.style.setProperty("--lean","0deg");face("smile");talk("I'm not looking! 🙈")});
+pw.addEventListener("blur",()=>{setTimeout(()=>{if(document.activeElement!==pw&&document.activeElement!==$("#eyebtn")){m.classList.remove("cover","cheat");talk("All done? 🙂")}},50)});
+$("#eyebtn").addEventListener("mousedown",e=>e.preventDefault());
+$("#eyebtn").onclick=()=>{
+  const show=pw.type==="password";pw.type=show?"text":"password";pw.focus();
+  m.classList.add("cover");m.classList.toggle("cheat",show);
+  face(show?"o":"smile");talk(show?"Okay… just a tiny peek 👀":"Back to not looking 🙈");
+};
+
+/* Hover reactions */
+$("#forgot").addEventListener("mouseenter",()=>{if(calm()){m.style.setProperty("--lean","14deg");mood("worried");face("wobble");talk("Happens to the best of us 🤷")}});
+$("#forgot").addEventListener("mouseleave",()=>{mood();face("smile")});
+["#g1","#ap"].forEach(id=>{const el=$(id);
+  el.addEventListener("mouseenter",()=>{if(calm()){lookLock=id;lookAtEl(el);mood("up",700);talk("The quick way in! ⚡")}});
+  el.addEventListener("mouseleave",()=>lookLock=null);
+  el.addEventListener("click",()=>{move("hop",550);talk("That would open Google or Apple (pretend) ⚡")});
+});
+$("#magic").onclick=()=>{move("spin",1000);sparks(10);face("big");talk("Abracadabra! ✨ (pretend)")};
+
+/* Login. Empty: it gets worried and shakes its head. Filled in: it crouches, launches, and lightning bolts rain down. */
+$("#go").onclick=()=>{
+  if(busy)return;
+  const okEmail=/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(em.value);
+  if(!okEmail||!pw.value){
+    $("#formbox").classList.remove("shake");void $("#formbox").offsetWidth;$("#formbox").classList.add("shake");
+    m.classList.remove("cover","cheat");move("shake",560);mood("worried",1600);face("wobble");
+    talk(!okEmail?"Hmm, that email doesn't look right 🤔":"You forgot the password! 🙃");
+    setTimeout(()=>face("smile"),1600);
+    return;
+  }
+  busy=true;m.classList.remove("cover","cheat");m.style.setProperty("--lean","0deg");
+  mood("up happy");face("big");talk("Yay! See you inside! 🚀");m.classList.add("charged");$("#mini").classList.remove("zap");void $("#mini").offsetWidth;$("#mini").classList.add("zap");
+  confetti(m);
+  setTimeout(()=>{
+    bob.classList.add("launch");$("#shadow").style.opacity=0;
+    let n=0;const t=setInterval(()=>{const s=document.createElement("span");s.className="trail";s.style.cssText=`--c:${COLORS[n%5]};--x:${(Math.random()-.5)*60}px;--y:${20+Math.random()*30}px`;stage.appendChild(s);s.addEventListener("animationend",()=>s.remove());if(++n>14)clearInterval(t)},70);
+    setTimeout(()=>{const f=$("#flash");f.classList.remove("on");void f.offsetWidth;f.classList.add("on");rain()},500);
+  },650);
+  setTimeout(()=>{$("#formbox").style.display="none";$("#done").classList.add("on");say.style.opacity=0},1900);
+};
+function rain(){for(let i=0;i<22;i++){const r=document.createElement("span");r.className="bolt-rain";r.innerHTML=BOLT.replace("COL",COLORS[i%5]);r.style.cssText=`left:${Math.random()*100}vw;--d:${1100+Math.random()*1100}ms;--r0:${(Math.random()-.5)*60}deg;--r1:${(Math.random()-.5)*360}deg;animation-delay:${Math.random()*300}ms`;document.body.appendChild(r);r.addEventListener("animationend",()=>r.remove())}}
+function confetti(el){const r=el.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2;for(let i=0;i<36;i++){const c=document.createElement("span");c.className="confetti";const a=Math.random()*Math.PI*2,d=80+Math.random()*160;c.style.cssText=`left:${x}px;top:${y}px;--x:${Math.cos(a)*d}px;--y:${Math.sin(a)*d+60}px;--r:${(Math.random()-.5)*720}deg;--d:${900+Math.random()*700}ms;--c:${COLORS[i%5]}`;document.body.appendChild(c);c.addEventListener("animationend",()=>c.remove())}}
+$("#again").onclick=()=>{
+  bob.classList.remove("launch");$("#shadow").style.opacity=1;m.classList.remove("charged");mood();say.style.opacity=1;
+  $("#done").classList.remove("on");$("#formbox").style.display="";
+  em.value="";pw.value="";pw.type="password";$("#ok").classList.remove("on");delete em.dataset.v;sawAt=false;
+  m.classList.add("enter");busy=true;face("o");talk("Is someone there? 👀");
+  setTimeout(()=>{mood("up happy",900);face("big");talk("It's you again! 👋")},1150);
+  setTimeout(()=>{m.classList.remove("enter");face("smile");busy=false},1700);
+};
+
+/* Click: giggles, a different reaction each time. Five quick clicks: a secret rainbow spin. */
+m.addEventListener("click",()=>{
+  if(busy)return;
+  if(sleeping){wake();return}
+  clicks++;clearTimeout(clickT);clickT=setTimeout(()=>clicks=0,1500);
+  if(clicks>=5){clicks=0;m.classList.add("rainbow");move("spin",1000);confetti(m);rain();face("big");talk("You found my secret! 🌈");setTimeout(()=>m.classList.remove("rainbow"),4000);return}
+  move("squish",420);mood("happy",500);face("big");talk(["Hehe, that tickles! 😆","Boop! 😄","Again? 😂","Okay okay! 🤭"][clicks-1]);
+  setTimeout(()=>face("smile"),600);
+});
+
+/* Idle for 15 seconds: yawns, slumps down behind the form and snores. Movement startles it awake. */
+function sleep(){
+  if(busy||document.activeElement===em||document.activeElement===pw)return;
+  face("yawn");move("stretch",1100);talk("*yawn* …");
+  setTimeout(()=>{if(busy)return;sleeping=true;m.classList.add("sleep");m.classList.remove("cover","cheat");m.style.setProperty("--lean","8deg");face("flat");talk("Zzz… 😴");
+    zzT=setInterval(()=>{const z=document.createElement("span");z.className="zz";z.textContent="z";z.style.cssText=`left:${52+Math.random()*8}%;top:40px;font-size:${14+Math.random()*10}px`;stage.appendChild(z);z.addEventListener("animationend",()=>z.remove())},700)},1100);
+}
+function wake(){
+  if(!sleeping)return;
+  sleeping=false;clearInterval(zzT);m.classList.remove("sleep");m.style.setProperty("--lean","0deg");
+  move("hop",550);mood("up surprised",1200);face("o");talk("Oh! I'm awake! I'm awake! 😳");
+  setTimeout(()=>face("smile"),1300);
+}
+function poke(){clearTimeout(idleT);if(sleeping)wake();idleT=setTimeout(sleep,15000)}
+["keydown","pointerdown","focusin"].forEach(ev=>document.addEventListener(ev,poke));
+poke();
+</script>
+</body>
+</html>
